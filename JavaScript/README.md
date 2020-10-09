@@ -128,17 +128,58 @@
   
   ```
 
+## call, apply, bind 区别
+
+  - apply() 方法调用一个具有给定this值的函数，以及以一个数组（或类数组对象）的形式提供的参数。
+  - call()方法的作用和 apply() 方法类似，区别就是call()方法接受的是参数列表，而apply()方法接受的是一个参数数组
+  - bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用
+
 ## this 是什么
 
-## call, apply, bind 区别
+  - 函数的调用方式决定了 this 的值（运行时绑定）。this 不能在执行期间被赋值，并且在每次函数被调用时 this 的值也可能会不同
+  - ES5 引入了 bind 方法来设置函数的 this 值
+  - ES2015 引入了箭头函数，箭头函数不提供自身的 this 绑定
 
 ## 闭包/立即执行函数是什么
 
+  - 立即执行函数：声明一个匿名函数马上调用这个匿名函数 创建一个独立的作用域 这个作用域里面的变量，外面访问不到 避免变量污染
+
+  - 闭包 函数 A 返回了一个函数 B，并且函数 B 中使用了函数 A 的变量，函数 B 就被称为闭包
+  ```JavaScript
+  function A() {
+    let a = 1
+    function B() {
+        console.log(a)
+    }
+    return B
+  }
+  ```
+
 ## async/await 怎么用,如何捕获异常？
 
-## 如何实现深拷贝？
+  - async 关键字 这个函数总是返回一个 promise
 
-## 如何用正则实现 trim()？
+  - await 关键字，它只在 async 函数内工作
+
+  - await 不能在顶层代码运行
+  ```JavaScript
+  (async () => {
+    let response = await fetch('/article/promise-chaining/user.json')
+    let user = await response.json()
+    ...
+  })()
+  ```
+
+  - 要声明一个 class 中的 async 方法，只需在对应方法前面加上 async 即可
+
+  - Error 处理
+  ```JavaScript
+  try{} catch {}
+
+  .catch()
+  ```
+
+## 如何实现深拷贝？
 
 ## 不用 class 如何实现继承？用 class 又如何实现？
 
