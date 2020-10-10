@@ -1,10 +1,59 @@
-## 事件机制
+## 浏览器事件
+  - 事件传播的 3 个阶段
+    1. 捕获阶段（Capturing phase）—— 事件（从 Window）向下走近元素
+    2. 目标阶段（Target phase）—— 事件到达目标元素
+    3. 冒泡阶段（Bubbling phase）—— 事件从元素上开始冒泡
 
-## 事件委托
+  - 注册事件
+  ```js
+  /**
+  * type 表示监听事件类型的字符串。
+  * listener 处理程序。
+  * options.once 如果为 true，那么会在被触发后自动删除监听器
+  * options.capture options 也可以是 false/true，它与 {capture: false/true} 相同 如果为 false（默认值），
+  则在冒泡阶段设置处理程序 如果为 true，则在捕获阶段设置处理程序
+  * options.passive 如果为 true，那么处理程序将不会调用 preventDefault()
+  */
+  target.addEventListener(type, listener, options);
+  ```
+  - 停止冒泡
+  用于停止冒泡的方法是 `event.stopPropagation()`
+  `event.stopImmediatePropagation()`可以用于停止冒泡，并阻止当前元素上的处理程序运行
+
+  - 事件代理
+
+    如果一个节点中的子节点是动态生成的，那么子节点需要注册事件的话应该注册在父节点上
 
 ## 什么是 JSONP，什么是 CORS，什么是跨域？
+ 
+  - 如果协议、域名或者端口有一个不同就是跨域
+  - JSONP 的原理很简单，就是利用 `<script>` 标签没有跨域限制的漏洞。通过 `<script>` 标签指向一个需要访问的地址并提供一个回调函数来接收数据。
+  JSONP 使用简单且兼容性不错，但是只限于 `get` 请求。
+    ```js
+    <script src="http://domain/api?param1=a&param2=b&callback=jsonp"></script>
+    <script>
+        function jsonp(data) {
+          console.log(data)
+      }
+    </script>    
+    ```
+  - 服务端设置 `Access-Control-Allow-Origin` 就可以开启 CORS。 该属性表示哪些域名可以访问资源，如果设置通配符则表示所有网站都可以访问资源
 
-## 事件循环_执行栈_宏任务_微任务
+## 运行时(Runtime) 栈(Stack) 堆(Heap) 队列(Queue)
+  - 运行时
+  ![](https://mdn.mozillademos.org/files/17124/The_Javascript_Runtime_Environment_Example.svg)
+  - 栈 函数调用形成了一个由若干帧组成的栈。
+  - 堆 对象被分配在堆中，堆是一个用来表示一大块（通常是非结构化的）内存区域的计算机术语。
+  - 队列 一个 JavaScript 运行时包含了一个待处理消息的消息队列
+
+
+## 事件循环(event loop) 宏任务(macrotasks) 微任务(microtask)
+  - 事件循环是一个在 JavaScript 引擎等待任务，执行任务和进入休眠状态等待更多任务这几个状态之间转换的无限循环
+  - 一个任务到来时，引擎可能正处于繁忙状态，那么这个任务就会被排入队列。多个任务组成了一个队列，即所谓的“宏任务队列
+  - 引擎执行任务时永远不会进行渲染（render）。仅在任务完成后才会绘制对 DOM 的更改。
+  - 如果一项任务执行花费的时间过长，浏览器将无法执行其他任务，无法处理用户事件，因此，在一定时间后浏览器会在整个页面抛出一个如“页面未响应”之类的警报，建议你终止这个任务。这种情况常发生在有大量复杂的计算或导致死循环的程序错误时
+  - 异步任务需要适当的管理。为此，ECMA 标准规定了一个内部队列 PromiseJobs，通常被称为“微任务队列
+
 
 ## cookie，localStorage，sessionStorage，indexDB
 
