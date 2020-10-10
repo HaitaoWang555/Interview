@@ -180,9 +180,140 @@
   ```
 
 ## 如何实现深拷贝？
+`JSON.parse(JSON.stringify(object))` 
+局限性
+  - 会忽略 `undefined`
+  - 会忽略 `symbol`
+  - 不能序列化函数
+  - 不能解决循环引用的对象
+```js
+let a = {
+    age: undefined,
+    sex: Symbol('male'),
+    jobs: function() {},
+    name: 'yck'
+}
+let b = JSON.parse(JSON.stringify(a))
+console.log(b) // {name: "yck"}
+```
+复杂数据可以使用 [lodash 的深拷贝函数](https://lodash.com/docs#cloneDeep)
 
 ## 不用 class 如何实现继承？用 class 又如何实现？
+  ```js
+  function Person(name, sex){
+    this.name = name;
+    this.sex = sex;
+  }
 
+  Person.prototype.getName = function(){
+    console.log(this.name)
+  };    
+
+  function Male(name, sex, age){
+    Person.call(this, name, sex);
+    this.age = age;
+  }
+
+  Male.prototype = Object.create(Person.prototype);
+  Male.prototype.constructor = Male;
+  Male.prototype.getAge = function(){
+    console.log(this.age);
+  };
+
+  var wht = new Male('wanghaitao', '男', 24);
+  wht.getName();
+  ```
+  ```js
+  class Animal {
+    constructor(name) {
+      this.name = name
+    }
+
+    run() {
+      console.log(this.name + ' run')
+    }  
+    static printName() {
+      console.log(this.name)
+    }
+    speak() {
+      console.log(this.name + ' makes a noise.')
+    }
+  }
+
+  class Dog extends Animal {
+    constructor(name, age) {
+      super(name)
+      this.age = age
+    }
+
+    sayAge() {
+      console.log(this.name + this.age + ' age.')
+    }
+    
+    speak() {
+      super.speak()
+      console.log(this.name + ' barks.')
+    }
+  }
+
+  var d = new Dog('Mitzie', 24)
+  d.speak()
+  ```
 ## 如何实现数组去重？
-
+```js
+// 双层循环，外层循环元素，内层循环时比较值
+var arr = [1,2,3,'a',1,2]
+var len = arr.length
+for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+        if (arr[i] === arr[j]) {
+            arr.splice(j,1)
+            len--
+            j--
+        }
+    }
+}
+// 利用ES6的set
+var arr = [1,2,3,'a',1,2]
+arr =  Array.from(new Set(arr))
+console.log(arr)
+```
 ## Proxy
+
+Proxy 是 ES6 中新增的功能，可以用来自定义对象中的操作
+
+```js
+let p = new Proxy(target, handler);
+// `target` 代表需要添加代理的对象
+// `handler` 用来自定义对象中的操作
+```
+
+
+可以很方便的使用 Proxy 来实现一个数据绑定和监听
+
+```js
+let onWatch = (obj, setBind, getLogger) => {
+  let handler = {
+    // target 目标对象。property 被获取的属性名。receiver Proxy或者继承Proxy的对象
+    get(target, property, receiver) {
+      getLogger(target, property)
+      return Reflect.get(target, property, receiver);
+    },
+    set(target, property, value, receiver) {
+      setBind(value);
+      return Reflect.set(target, property, value);
+    }
+  };
+  return new Proxy(obj, handler);
+};
+
+let obj = { a: 1 }
+let value
+let p = onWatch(obj, (v) => {
+  value = v
+}, (target, property) => {
+  console.log(`Get '${property}' = ${target[property]}`);
+})
+p.a = 2 // bind `value` to `2`
+p.a // -> Get 'a' = 2
+```
