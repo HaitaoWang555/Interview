@@ -1,11 +1,12 @@
 ## 有哪些常见 loader 和 plugin，你用过哪些？
 
-    - babel-loader：编译es6代码的
+    - babel-loader：把 ES6 转换成 ES5
     - file-loader:把文件输出到文件夹，文件中通过url 引入代码
     - url-loader：跟file-loader 相似，但是小文件可以处理成base64 加到文件代码中去
+    - source-map-loader：加载额外的 Source Map 文件，以方便断点调试
     - css-loader:加载css，压缩 格式化 文件导入css 
     - style-loader：把css 加载到js 中去
-    - image-loader：处理图片
+    - image-loader：加载并且压缩图片文件
     - define-plugin：定义环境，可以通过设置不同环境打对应的包
     - common-chunks-plugin：提取公共代码
     - uglifyjs-webpack-plugin: 压缩js 代码
@@ -30,6 +31,19 @@
 
 ## 如何提高构建速度？
 
+  - 多入口情况下，使用CommonsChunkPlugin来提取公共代码
+  - 通过externals配置来提取常用库
+  - Happypack 使用多线程打包
+  - 利用DllPlugin和DllReferencePlugin预编译资源模块 通过DllPlugin来对那些我们引用但是绝对不会修改的npm包来进行预编译，再通过DllReferencePlugin将预编译的模块加载进来。
+  - 使用webpack-uglify-parallel来提升uglifyPlugin的压缩速度。 原理上webpack-uglify-parallel采用了多核并行压缩来提升压缩速度
+  - 缓存构建:webpack构建中,可以通过设置cacheDirectory来达到缓存的目的。
+  - 通过配置resolve.modules来告诉webpack解析模块时应该搜索的目
+
 
 ## 转义出的文件过大怎么办
 
+  - ExtractTextPlugin：提取样式到css文件
+  - CommonsChunkPlugin：提取通用模块文件
+  - 压缩 JS、CSS、图片
+  - 按需加载
+  - 使用splitChunks来进行拆包,抽离第三方依赖库
