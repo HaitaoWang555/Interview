@@ -37,7 +37,12 @@
   - 利用DllPlugin和DllReferencePlugin预编译资源模块 通过DllPlugin来对那些我们引用但是绝对不会修改的npm包来进行预编译，再通过DllReferencePlugin将预编译的模块加载进来。
   - 使用webpack-uglify-parallel来提升uglifyPlugin的压缩速度。 原理上webpack-uglify-parallel采用了多核并行压缩来提升压缩速度
   - 缓存构建:webpack构建中,可以通过设置cacheDirectory来达到缓存的目的。
-  - 通过配置resolve.modules来告诉webpack解析模块时应该搜索的目
+  - 缩小文件搜索范围
+    - 精确 loader 的 test 处理文件范围
+    - 使用 include, exclude 缩小 loader 处理范围
+    - 使用 resolve.alias 设置路径别名
+    - 使用 resolve.extensions 设置文件后缀查找列表
+    - 使用 resolve.modules 直接指定第三方库的查找的 node_modules 位置，避免往上递归查找
 
 
 ## 转义出的文件过大怎么办
