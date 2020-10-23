@@ -13,7 +13,7 @@
 ## NextTick
 
   `nextTick` 可以让我们在下次 DOM 更新循环结束之后执行延迟回调，用于获得更新后的 DOM。
-  `setImmediate` `MessageChannel` `setTimeout`
+  `Promise.then`、`MutationObserver` 和 `setImmediate`，如果执行环境不支持，则会采用 setTimeout(fn, 0) 代替
 
 ## watch 和 computed 和 methods 区别是什么？
 
@@ -34,6 +34,7 @@
   ```
   - provide/inject
   - Vuex
+  - ref
 
 ## Vue 数据响应式怎么做到的？
 
@@ -101,3 +102,17 @@
     // 可以访问组件实例 `this`
   }
   ```
+
+## v-if和v-for哪个优先级更高？
+  - v-for优先于v-if被解析
+  - 为了过滤列表中的项目 定义一个计算属性，让其返回过滤后的列表即可
+  - 为了避免渲染本应该被隐藏的列表，此时把 v-if 移动至容器元素上
+
+## key的作用
+  - key的作用主要是为了更高效的更新虚拟DOM。
+  - 判断两个节点是否是相同节点 key是一个必要条件
+
+## 双向绑定以及它的实现原理
+
+  - `v-model` 指令在表单 `<input>`、`<textarea>` 及 `<select>` 元素上创建双向数据绑定, 它会根据控件类型自动选取正确的方法来更新元素
+  - v-model是语法糖，默认情况下相当于:value和@input。

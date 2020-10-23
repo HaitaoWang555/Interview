@@ -261,6 +261,25 @@ console.log(b) // {name: "yck"}
   ```
 ## 如何实现数组去重？
 ```js
+// 遍历数组，建立新数组，利用indexOf判断是否存在于新数组中，不存在则push到新数组，最后返回新数组
+var arr = [1,2,3,'a',1,2]
+var ret = []
+for (var i = 0, j = arr.length; i < j; i++) {
+  if (ret.indexOf(arr[i]) === -1) {
+    ret.push(arr[i])
+  }
+}
+// 遍历数组，利用object对象保存数组值，判断数组值是否已经保存在object中，未保存则push到新数组并用object[arrayItem]=true的方式记录保存
+var arr = [1,2,3,'a',1,2]
+var tmp = {}
+var ret = []
+for (var i = 0, j = arr.length; i < j; i++) {
+  if (!tmp[arr[i]]) {
+    tmp[arr[i]] = 1
+    ret.push(arr[i])
+  }
+}
+
 // 双层循环，外层循环元素，内层循环时比较值
 var arr = [1,2,3,'a',1,2]
 var len = arr.length
